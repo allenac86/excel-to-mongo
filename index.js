@@ -31,7 +31,7 @@ const transformData = () => {
 };
 
 // routes
-app.get('/', async (req, res) => {
+app.get('/', (req, res) => {
 	res.json({ finalObjectArr });
 });
 
