@@ -13,12 +13,6 @@ const BookSchema = new mongoose.Schema({
 		trim: true,
 		maxlength: [30, 'author can not be more than 30 characters long'],
 	},
-	series: {
-		type: String,
-	},
-	numInSeries: {
-		type: Number,
-	},
 	isRead: {
 		type: Boolean,
 		default: true,
