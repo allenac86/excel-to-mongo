@@ -5,14 +5,15 @@ const excelFile = require('read-excel-file/node');
 const lodash = require('lodash');
 const notFound = require('./routes/notFound');
 const connect = require('./db/db');
-const BookModel = require('./BookModel');
+const DataModel = require('./model/DataModel');
 
 const PORT = process.env.PORT || 3050;
 const app = express();
+
 let originalExcelData;
 let objValuesArr = [];
 let objPropsArr = [];
-let finalObjectArr = [];
+let collection = [];
 
 app.use(cors());
 app.use(express.json());
@@ -25,14 +26,14 @@ const shapeExcelData = (data) => {
 
 const transformData = () => {
 	objValuesArr.forEach((array) => {
-		const book = lodash.zipObject(objPropsArr, array);
-		finalObjectArr.push(book);
+		const document = lodash.zipObject(objPropsArr, array);
+		collection.push(document);
 	});
 };
 
 // routes
 app.get('/', (req, res) => {
-	res.json({ finalObjectArr });
+	res.json({ collection });
 });
 
 app.use(notFound);
@@ -42,14 +43,14 @@ const start = async () => {
 	try {
 		await connect(process.env.MONGO_URI)
 			.then(
-				excelFile('./books.xlsx').then((rows) => {
+				excelFile('./data/data.xlsx').then((rows) => {
 					originalExcelData = rows;
 					shapeExcelData(originalExcelData);
 					transformData();
 				})
 			)
 			.catch((error) => console.log(error.message));
-		BookModel.insertMany(finalObjectArr)
+		DataModel.insertMany(collection)
 			.then(() => {
 				console.log('collections inserted ...');
 			})
