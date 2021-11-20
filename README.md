@@ -15,7 +15,7 @@ The excel file should be formatted with the first row being the column headings/
   - run npm install
   - create the .env file in the root directory
   - paste data into data/data.xlsx and save
-  - change the data model to have as many properties as there are column headings in excel
+  - change the data model to have as many properties as there are column headings in excel (https://mongoosejs.com/docs/guide.html#definition)
   - run npm start
   - upon a successful start you will see a log to the console with the port the server is listening on and that the collection was inserted
   - check the db for the newly inserted collection
