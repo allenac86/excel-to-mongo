@@ -15,6 +15,10 @@ const DataModel = new mongoose.Schema({
 		maxlength: [30, 'author can not be more than 30 characters long'],
 	},
 	[process.env.PROP_THREE]: {
+		type: Number,
+		required: [true, `must provide ${process.env.PROP_THREE}`],
+	},
+	[process.env.PROP_FOUR]: {
 		type: Boolean,
 		default: true,
 	},
