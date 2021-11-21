@@ -18,21 +18,18 @@ let collection = [];
 app.use(cors());
 app.use(express.json());
 
-const shapeExcelData = (data) => {
-	const excelDataCopy = [...data];
-	propsArray = excelDataCopy.shift();
-	recordsArray = excelDataCopy;
-};
-
-/**
- * Creates an object with property names from each item in propsArray
- * and maps the values to the corresponding property for each record
- */
-const transformData = () => {
-	recordsArray.forEach((record) => {
+const createCollection = (data) => {
+	data.forEach((record) => {
 		const document = lodash.zipObject(propsArray, record);
 		collection.push(document);
 	});
+};
+
+const transformData = (data) => {
+	const excelDataCopy = [...data];
+	propsArray = excelDataCopy.shift();
+	recordsArray = excelDataCopy;
+	createCollection(recordsArray);
 };
 
 // routes
@@ -49,8 +46,7 @@ const start = async () => {
 			.then(
 				excelFile('./data/data.xlsx').then((rows) => {
 					originalExcelData = rows;
-					shapeExcelData(originalExcelData);
-					transformData();
+					transformData(originalExcelData);
 				})
 			)
 			.catch((error) => console.log(error.message));
