@@ -19,3 +19,5 @@
   - run npm start
   - upon a successful start you will see a log to the console with the port the server is listening on and that the collection was inserted
   - check the db for the newly inserted collection
+
+# Unit tests coming soon
