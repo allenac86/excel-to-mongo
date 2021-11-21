@@ -11,8 +11,8 @@ const PORT = process.env.PORT || 3050;
 const app = express();
 
 let originalExcelData;
-let objValuesArr = [];
-let objPropsArr = [];
+let recordsArray = [];
+let propsArray = [];
 let collection = [];
 
 app.use(cors());
@@ -20,13 +20,17 @@ app.use(express.json());
 
 const shapeExcelData = (data) => {
 	const excelDataCopy = [...data];
-	objPropsArr = excelDataCopy.shift();
-	objValuesArr = excelDataCopy;
+	propsArray = excelDataCopy.shift();
+	recordsArray = excelDataCopy;
 };
 
+/**
+ * Creates an object with property names from each item in propsArray
+ * and maps the values to the corresponding property for each record
+ */
 const transformData = () => {
-	objValuesArr.forEach((array) => {
-		const document = lodash.zipObject(objPropsArr, array);
+	recordsArray.forEach((record) => {
+		const document = lodash.zipObject(propsArray, record);
 		collection.push(document);
 	});
 };
