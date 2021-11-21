@@ -1,6 +1,6 @@
 # excel-to-mongo
 
-Tool that reads an excel spreadsheet and uploads each row as a document to a mongoDB collection when the app is started. This was designed as a one-time use, so every time the app is started the collections will be added to the db. The tool only needs to be run once for each data set you want to turn into a mongoDB collection.
+Tool that reads an excel spreadsheet and uploads each row as a document to a mongoDB collection when the app is started. This was designed as a one-time use, so every time the app is started the collections will be added to the db. The tool only needs to be run once for each data set you want to turn into a mongoDB collection. In order to use this tool you will need to have node installed.
 
 The excel file should be formatted with the first row being the column headings/property names and each subsequent row being a the data that will be converted to an object and saved to a mongoDB collection. Compare the model/DataModel.js and the data/data.xlsx files to see how the spreadsheet and data model relate.
 
