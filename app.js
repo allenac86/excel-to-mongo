@@ -10,7 +10,6 @@ const DataModel = require('./model/DataModel');
 const PORT = process.env.PORT || 3050;
 const app = express();
 
-let originalExcelData;
 let recordsArray = [];
 let propsArray = [];
 let collection = [];
@@ -32,6 +31,16 @@ const transformData = (data) => {
 	createCollection(recordsArray);
 };
 
+const readExcelData = (path) => {
+	let originalExcelData;
+	excelFile(path)
+		.then((rows) => {
+			originalExcelData = rows;
+			transformData(originalExcelData);
+		})
+		.catch((error) => console.log(error));
+};
+
 // routes
 app.get('/', (req, res) => {
 	res.json({ collection });
@@ -41,14 +50,11 @@ app.use(notFound);
 
 // connect to db, start server, shape data from excel
 const start = async () => {
+	const filePath = './data/data.xlsx';
+
 	try {
 		await connect(process.env.MONGO_URI)
-			.then(
-				excelFile('./data/data.xlsx').then((rows) => {
-					originalExcelData = rows;
-					transformData(originalExcelData);
-				})
-			)
+			.then(readExcelData(filePath))
 			.catch((error) => console.log(error.message));
 		DataModel.insertMany(collection)
 			.then(() => {
