@@ -20,12 +20,14 @@ app.use(express.json());
 const createCollection = (data) => {
 	data.forEach((record) => {
 		const document = lodash.zipObject(propsArray, record);
+
 		collection.push(document);
 	});
 };
 
 const transformData = (data) => {
 	const excelDataCopy = [...data];
+
 	propsArray = excelDataCopy.shift();
 	recordsArray = excelDataCopy;
 	createCollection(recordsArray);
@@ -33,6 +35,7 @@ const transformData = (data) => {
 
 const readExcelData = (path) => {
 	let originalExcelData;
+
 	excelFile(path)
 		.then((rows) => {
 			originalExcelData = rows;
@@ -46,6 +49,7 @@ app.get('/', (req, res) => {
 	res.json({ collection });
 });
 
+// 404 route handler
 app.use(notFound);
 
 // connect to db, start server, shape data from excel
@@ -56,11 +60,13 @@ const start = async () => {
 		await connect(process.env.MONGO_URI)
 			.then(readExcelData(filePath))
 			.catch((error) => console.log(error.message));
+
 		DataModel.insertMany(collection)
 			.then(() => {
 				console.log('collections inserted ...');
 			})
 			.catch((error) => console.log(error.message));
+
 		app.listen(PORT, console.log(`Server is listening on port: ${PORT} ...`));
 	} catch (err) {
 		console.error(err);
