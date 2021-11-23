@@ -65,9 +65,13 @@ const start = async () => {
 			.then(() => {
 				console.log('collections inserted ...');
 			})
+			.then(() => {
+				app.listen(
+					PORT,
+					console.log(`Server is listening on port: ${PORT} ...`)
+				);
+			})
 			.catch((error) => console.log(error.message));
-
-		app.listen(PORT, console.log(`Server is listening on port: ${PORT} ...`));
 	} catch (err) {
 		console.error(err);
 	}
