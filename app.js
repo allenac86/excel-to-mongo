@@ -1,10 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const excelFile = require('read-excel-file/node');
-const lodash = require('lodash');
 const notFound = require('./routes/notFound');
 const connect = require('./db/db');
+const excelFile = require('read-excel-file/node');
+const lodash = require('lodash');
 const DataModel = require('./model/DataModel');
 
 const PORT = process.env.PORT || 3050;
@@ -17,29 +17,29 @@ let collection = [];
 app.use(cors());
 app.use(express.json());
 
-const createCollection = (data) => {
-	data.forEach((record) => {
+const createCollection = (rowDataArray) => {
+	rowDataArray.forEach((record) => {
 		const document = lodash.zipObject(propsArray, record);
 
 		collection.push(document);
 	});
 };
 
-const transformData = (data) => {
-	const excelDataCopy = [...data];
+const massageData = (excelData) => {
+	const excelDataCopy = [...excelData];
 
 	propsArray = excelDataCopy.shift();
 	recordsArray = excelDataCopy;
-	createCollection(recordsArray);
+	return recordsArray;
 };
 
-const readExcelData = (path) => {
+const convertExcelToMongoCollection = (path) => {
 	let originalExcelData;
 
 	excelFile(path)
 		.then((rows) => {
 			originalExcelData = rows;
-			transformData(originalExcelData);
+			createCollection(massageData(originalExcelData));
 		})
 		.catch((error) => console.log(error));
 };
@@ -52,13 +52,12 @@ app.get('/', (req, res) => {
 // 404 route handler
 app.use(notFound);
 
-// connect to db, start server, shape data from excel
 const start = async () => {
 	const filePath = './data/data.xlsx';
 
 	try {
 		await connect(process.env.MONGO_URI)
-			.then(readExcelData(filePath))
+			.then(convertExcelToMongoCollection(filePath))
 			.catch((error) => console.log(error.message));
 
 		DataModel.insertMany(collection)
