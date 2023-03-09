@@ -2,26 +2,26 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 
 const DataModel = new mongoose.Schema({
-	[process.env.PROP_ONE]: {
+	title: {
 		type: String,
-		required: [true, `must provide ${process.env.PROP_ONE}`],
+		required: [true, `must provide title`],
 		trim: true,
 		maxlength: [100, 'title can not be more than 100 characters long'],
 	},
-	[process.env.PROP_TWO]: {
+	author: {
 		type: String,
-		required: [true, `must provide ${process.env.PROP_TWO}`],
+		required: [true, `must provide author`],
 		trim: true,
 		maxlength: [30, 'author can not be more than 30 characters long'],
 	},
-	[process.env.PROP_THREE]: {
+	yearPublished: {
 		type: Number,
-		required: [true, `must provide ${process.env.PROP_THREE}`],
+		required: [true, `must provide year published`],
 	},
-	[process.env.PROP_FOUR]: {
+	isRead: {
 		type: Boolean,
 		default: true,
 	},
 });
 
-module.exports = mongoose.model(process.env.MODEL_NAME, DataModel);
+module.exports = mongoose.model('Book', DataModel);

@@ -53,7 +53,8 @@ app.get('/', (req, res) => {
 app.use(notFound);
 
 const start = async () => {
-	const filePath = './data/data.xlsx';
+	const filePath = process.env.FILE_PATH;
+	let server;
 
 	try {
 		await connect(process.env.MONGO_URI)
@@ -65,10 +66,12 @@ const start = async () => {
 				console.log('collections inserted ...');
 			})
 			.then(() => {
-				app.listen(
-					PORT,
-					console.log(`Server is listening on port: ${PORT} ...`)
-				);
+				server = app.listen(PORT, () => {
+					console.log(
+						'The excel-to-mongo conversion is complete. Shutting down.'
+					);
+					// server.close();
+				});
 			})
 			.catch((error) => console.log(error.message));
 	} catch (err) {
