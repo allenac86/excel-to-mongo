@@ -17,20 +17,20 @@ let collection = [];
 app.use(cors());
 app.use(express.json());
 
-const createCollection = (rowDataArray) => {
-	rowDataArray.forEach((record) => {
-		const document = lodash.zipObject(propsArray, record);
-
-		collection.push(document);
-	});
-};
-
 const massageData = (excelData) => {
 	const excelDataCopy = [...excelData];
 
 	propsArray = excelDataCopy.shift();
 	recordsArray = excelDataCopy;
 	return recordsArray;
+};
+
+const createCollection = (rowDataArray) => {
+	rowDataArray.forEach((record) => {
+		const document = lodash.zipObject(propsArray, record);
+
+		collection.push(document);
+	});
 };
 
 const convertExcelToMongoCollection = (path) => {
