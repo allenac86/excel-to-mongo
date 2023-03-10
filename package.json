@@ -1,7 +1,7 @@
 {
-	"name": "excel-to-json",
-	"version": "1.0.0",
-	"description": "",
+	"name": "excel-to-mongo",
+	"version": "2.0.0",
+	"description": "Converts .xlsx to JSON and saves to a MongoDB collection.",
 	"main": "app.js",
 	"scripts": {
 		"start": "node app.js"
