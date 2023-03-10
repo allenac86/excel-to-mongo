@@ -1,21 +1,13 @@
 require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const notFound = require('./routes/notFound');
 const connect = require('./db/db');
 const excelFile = require('read-excel-file/node');
 const lodash = require('lodash');
 const DataModel = require('./model/DataModel');
-
-const PORT = process.env.PORT || 3050;
-const app = express();
+const { Mongoose, connection } = require('mongoose');
 
 let recordsArray = [];
 let propsArray = [];
 let collection = [];
-
-app.use(cors());
-app.use(express.json());
 
 const massageData = (excelData) => {
 	const excelDataCopy = [...excelData];
@@ -42,41 +34,35 @@ const convertExcelToMongoCollection = (path) => {
 			createCollection(massageData(originalExcelData));
 		})
 		.catch((error) => console.log(error));
+
+	console.log("File converted ...");
 };
 
-// routes
-app.get('/', (req, res) => {
-	res.json({ collection });
-});
-
-// 404 route handler
-app.use(notFound);
-
 const start = async () => {
-	const filePath = process.env.FILE_PATH;
-	let server;
 
 	try {
 		await connect(process.env.MONGO_URI)
-			.then(convertExcelToMongoCollection(filePath))
+			.then(convertExcelToMongoCollection(process.env.FILE_PATH))
 			.catch((error) => console.log(error.message));
 
 		DataModel.insertMany(collection)
 			.then(() => {
-				console.log('collections inserted ...');
+				console.log('Collections inserted ...');
 			})
 			.then(() => {
-				server = app.listen(PORT, () => {
-					console.log(
-						'The excel-to-mongo conversion is complete. Shutting down.'
-					);
-					// server.close();
-				});
+				console.log("Operation complete ...");
 			})
-			.catch((error) => console.log(error.message));
+			.catch((error) => console.log(error.message))
+			.finally(() => {
+				connection.close(false, () => {
+					console.log("Database connection closed");
+					process.exit(0);
+				});
+			});
 	} catch (err) {
 		console.error(err);
 	}
+
 };
 
 start();
