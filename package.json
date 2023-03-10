@@ -12,7 +12,13 @@
 	"dependencies": {
 		"dotenv": "^10.0.0",
 		"lodash": "^4.17.21",
-		"mongoose": "^6.0.13",
+		"mongoose": "^6.4.6",
 		"read-excel-file": "^5.2.25"
+	},
+	"overrides": {
+		"jszip": "3.8.0",
+		"minimatch": "3.0.5",
+		"minimist": "1.2.6",
+		"@xmldom/xmldom": "0.7.7"
 	}
 }
